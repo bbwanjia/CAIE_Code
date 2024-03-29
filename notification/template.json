@@ -1,10 +1,10 @@
 {
-    "type": "add/update/deprecate",
+    "type": "add|update|deprecate",
     "branch": ["stable", "nightly", "dev"],
     "expiry_date": "YYYY-MM-DD",
     "content": "Update Content",
     "deprecation": {
-        "keyword": "Deprecated Keyword",
+        "keyword": ["Deprecated Keyword 1", "Deprecated Keyword 2"],
         "deprecation_date": "YYYY-MM-DD"
     }
 }
