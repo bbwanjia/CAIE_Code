@@ -59,6 +59,9 @@ class Op_mul(AST_Node):
     def exe(self):
         n1 = self.left.exe()
         n2 = self.right.exe()
+        if any(i[1] == 'STRING' for i in [n1, n2]):
+            add_error_message(f'Cannot multiply `{n1[1]}` with `{n2[1]}`', self)
+            return
         try:
             v = n1[0] * n2[0]
             if int(v) == v:
