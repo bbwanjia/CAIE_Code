@@ -19,6 +19,6 @@ def test_requirements():
         except:
             print(f'Missing Important Dependence `{package_name}`\nTrying to Install for You...')
             if os.environ.get('CODESPACES'):
-                os.system(f'{sys.executable} -m pip install {package_name}')
+                os.system(f'"{sys.executable}" -m pip install {package_name}')
             else:
-                os.system(f'{sys.executable} -m pip install {package_name} -i {tuna}')
+                os.system(f'"{sys.executable}" -m pip install {package_name} -i {tuna}')
