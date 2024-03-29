@@ -93,7 +93,7 @@ def get_commit_hash_msg():
         return latest_commit_hash, latest_commit_message, local_commit_hash, local_commit_message
 
 def show_notification(_branch):
-    f = os.path.join('notification', 'notification.json')
+    f = os.path.join(HOME_PATH, 'notification', 'notification.json')
     with open(f, 'r') as file:
         notification_data = json.load(file)
     if _branch in notification_data['branch']:

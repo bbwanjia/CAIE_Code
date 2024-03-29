@@ -88,7 +88,7 @@ def remove_error():
     options_dict['show_error'] = False
 
 def notification():
-    show_notification("all")
+    show_notification(get_current_branch())
 
 def update_version():
     update()
