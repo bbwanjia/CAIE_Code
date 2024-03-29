@@ -3,7 +3,9 @@ from .animation import new_animation
 import os
 import git
 import requests
+import json
 from time import time
+from datetime import datetime
 
 VERSION = ''
 
@@ -87,6 +89,30 @@ def get_commit_hash_msg():
         local_commit_message = repo.head.reference.commit.message.strip()
         return latest_commit_hash, latest_commit_message, local_commit_hash, local_commit_message
 
+def show_notification(_branch):
+    f = os.path.join('notification', 'notification.json')
+    with open(f, 'r') as file:
+        notification_data = json.load(file)
+    if _branch in [notification_data['branch'], 'all']:
+        expiry_date_str = notification_data['expiry_date']
+        current_time = datetime.now()
+        expiry_date = datetime.strptime(expiry_date_str, '%Y-%m-%d')
+        if current_time < expiry_date:
+            if notification_data['type'] == 'deprecate':
+                print(f"\033[1m❗DEPRECATED NOTIFICATION❗\33[1m")
+                deprecate_keyword = ', '.join(notification_data['deprecation']['keyword'])
+                print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}")
+            elif notification_data['type'] == 'update':
+                print(f"\033[1m🎉UPDATE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}")
+            elif notification_data['type'] == 'add':
+                print(f"\033[1m🎉NEW FEATURE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}")
+        else: 
+            print("🙁No developer notification available.")
+    else: 
+        print("🙁No developer notification available.")
+
 def update():
     from .global_var import config
     if os.getenv('CODESPACES'):
@@ -116,6 +142,7 @@ def update():
         if u == '' or u == 'y':
             if new_animation('Updating', 3, _update, failed_msg='Failed to Update', remote=remote, repo=repo):
                 print('\033[1mUpdate Successful\033[0m')
+                show_notification(get_current_branch())
         else:
             print('Stop Updating')
     else:

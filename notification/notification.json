@@ -1,0 +1,10 @@
+{
+    "type": "deprecate",
+    "branch": "all",
+    "expiry_date": "2024-03-30",
+    "content": "Update Content",
+    "deprecation": {
+        "keyword": ["Ucase", "Lcase"],
+        "deprecation_date": "2024-04-01"
+    }
+}
