@@ -48,6 +48,7 @@ def check_update(repo: git.Repo, remote: git.Remote):
     elif local_commit_time > remote_commit_time:
         print(f"Good! Good! You are faster than \033[1m{get_current_branch()}\033[0m branch!")
         print("At", *get_commit_hash_msg())
+        show_notification(get_current_branch())
         global super_fast
         super_fast = True
         return False
@@ -63,8 +64,10 @@ def _update(remote, repo):
             repo.git.checkout(branch)
             remote.pull()
             print('\033[1mUpdate Successful\033[0m')
+            show_notification(get_current_branch())
         else:
             print('\033[1mSimulate Update Successful\033[0m')
+            show_notification(get_current_branch())
     except:
         print('\033[31;1mFailed to Update\033[0m')
 
@@ -93,7 +96,7 @@ def show_notification(_branch):
     f = os.path.join('notification', 'notification.json')
     with open(f, 'r') as file:
         notification_data = json.load(file)
-    if _branch in [notification_data['branch'], 'all']:
+    if _branch in notification_data['branch']:
         expiry_date_str = notification_data['expiry_date']
         current_time = datetime.now()
         expiry_date = datetime.strptime(expiry_date_str, '%Y-%m-%d')
@@ -142,9 +145,9 @@ def update():
         if u == '' or u == 'y':
             if new_animation('Updating', 3, _update, failed_msg='Failed to Update', remote=remote, repo=repo):
                 print('\033[1mUpdate Successful\033[0m')
-                show_notification(get_current_branch())
         else:
             print('Stop Updating')
     else:
         if not super_fast:
             print(f'Good! You are using the latest \033[1m{get_current_branch()}\033[0m version!\nAt {local_commit_hash}: {local_commit_message}')
+            show_notification(get_current_branch())

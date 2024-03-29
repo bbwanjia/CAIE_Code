@@ -1,6 +1,6 @@
 {
     "type": "add/update/deprecate",
-    "branch": "all/stable/nightly/dev",
+    "branch": ["stable", "nightly", "dev"],
     "expiry_date": "YYYY-MM-DD",
     "content": "Update Content",
     "deprecation": {
