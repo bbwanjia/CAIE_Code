@@ -56,6 +56,7 @@ cpc [file_paths] [options]
 | `-h` | `--help` | 显示帮助页面 |
 | `-k` | `--keywords` | 显示所有的关键字 |
 | `-m` | `--migrate` | 将一个目录中的所有 `.p` 文件切换为 `.cpc` |
+| `-n` | `--notification` | 显示由开发者发布的未过期通知 |
 | `-p` | `--parse` | 显示所有解析的信息 |
 | `-t` | `--time` | 显示运行脚本花费的时间 |
 | `-u` | `--update` | 更新此解释器的版本 |
