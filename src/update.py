@@ -107,7 +107,7 @@ def show_notification(_branch):
                 deprecation_date_str = notification_data['deprecation']['deprecation_date']
                 deprecation_date = datetime.strptime(deprecation_date_str, '%Y-%m-%d')
                 if current_time > deprecation_date:
-                    print(f"👉{deprecate_keyword}👈 has been already deprecated since {notification_data['deprecation']['deprecation_date']}")
+                    print(f"👉{deprecate_keyword}👈 has become deprecated since {notification_data['deprecation']['deprecation_date']}")
                 else:
                     print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}")
             elif notification_data['type'] == 'update':
