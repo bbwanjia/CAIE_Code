@@ -69,6 +69,7 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 | `-h` | `--help` | To show the help page |
 | `-k` | `--keywords` | To show all the keywords |
 | `-m` | `--migrate` | To migrate `.p` files to `.cpc` in a specified directory |
+| `-n` | `--notification` | To show notification published by developer (only if this is not expired) |
 | `-p` | `--parse` | To show parse information during running |
 | `-t` | `--time` | To show the time for the script to run |
 | `-u` | `--update` | To update the version |

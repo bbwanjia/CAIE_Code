@@ -3,7 +3,9 @@ from .animation import new_animation
 import os
 import git
 import requests
+import json
 from time import time
+from datetime import datetime
 
 VERSION = ''
 
@@ -46,6 +48,7 @@ def check_update(repo: git.Repo, remote: git.Remote):
     elif local_commit_time > remote_commit_time:
         print(f"Good! Good! You are faster than \033[1m{get_current_branch()}\033[0m branch!")
         print("At", *get_commit_hash_msg())
+        show_notification(get_current_branch())
         global super_fast
         super_fast = True
         return False
@@ -61,8 +64,10 @@ def _update(remote, repo):
             repo.git.checkout(branch)
             remote.pull()
             print('\033[1mUpdate Successful\033[0m')
+            show_notification(get_current_branch())
         else:
             print('\033[1mSimulate Update Successful\033[0m')
+            show_notification(get_current_branch())
     except:
         print('\033[31;1mFailed to Update\033[0m')
 
@@ -86,6 +91,35 @@ def get_commit_hash_msg():
         local_commit_hash = repo.head.commit.hexsha[:7]
         local_commit_message = repo.head.reference.commit.message.strip()
         return latest_commit_hash, latest_commit_message, local_commit_hash, local_commit_message
+
+def show_notification(_branch):
+    f = os.path.join(HOME_PATH, 'notification', 'notification.json')
+    with open(f, 'r') as file:
+        notification_data = json.load(file)
+    if _branch in notification_data['branch']:
+        expiry_date_str = notification_data['expiry_date']
+        current_time = datetime.now()
+        expiry_date = datetime.strptime(expiry_date_str, '%Y-%m-%d')
+        if current_time < expiry_date:
+            if notification_data['type'] == 'deprecate':
+                print(f"\033[1m❗DEPRECATED NOTIFICATION❗\33[1m")
+                deprecate_keyword = ', '.join(notification_data['deprecation']['keyword'])
+                deprecation_date_str = notification_data['deprecation']['deprecation_date']
+                deprecation_date = datetime.strptime(deprecation_date_str, '%Y-%m-%d')
+                if current_time > deprecation_date:
+                    print(f"👉{deprecate_keyword}👈 has become deprecated since {notification_data['deprecation']['deprecation_date']}")
+                else:
+                    print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}")
+            elif notification_data['type'] == 'update':
+                print(f"\033[1m🎉UPDATE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}")
+            elif notification_data['type'] == 'add':
+                print(f"\033[1m🎉NEW FEATURE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}")
+        else: 
+            print("🙁No developer notification available.")
+    else: 
+        print("🙁No developer notification available.")
 
 def update():
     from .global_var import config
@@ -121,3 +155,4 @@ def update():
     else:
         if not super_fast:
             print(f'Good! You are using the latest \033[1m{get_current_branch()}\033[0m version!\nAt {local_commit_hash}: {local_commit_message}')
+            show_notification(get_current_branch())
