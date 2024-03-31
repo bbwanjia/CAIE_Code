@@ -121,6 +121,30 @@ def show_notification(_branch):
     else: 
         print("🙁No developer notification available.")
 
+def binary_protection():
+    import hashlib
+    bin_folder = os.path.join(HOME_PATH, 'bin')
+    for file_name in os.listdir(bin_folder):
+        if file_name == ".DS_Store":
+            continue
+        elif file_name.endswith(".sha256"):
+            continue
+        file_path = os.path.join(bin_folder, file_name)
+        sha256_file = file_name + ".sha256"
+        sha256_path = os.path.join(bin_folder, sha256_file)
+        sha256_hash = hashlib.sha256()
+        with open(file_path, 'rb') as file:
+            for chunk in iter(lambda: file.read(4096), b''):
+                sha256_hash.update(chunk)
+        calculated_sha256 = sha256_hash.hexdigest()
+        with open(sha256_path, 'r') as sha256_file:
+            expected_sha256 = sha256_file.read().strip()
+
+        if calculated_sha256 != expected_sha256:
+            print("❗INTEGRITY WARNING❗")
+            print("Binary Launcher has been modified, please reinstall from the official source.")
+            quit(1)
+
 def integrity_protection():
     repo = git.Repo(HOME_PATH)
     if not os.environ.get('CODESPACES'):
