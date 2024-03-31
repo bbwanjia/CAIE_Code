@@ -22,7 +22,6 @@ from src.quit import quit
 from src.line_commands import run_command
 from src.update import update
 from src.update import update_expired
-from src.update import binary_protection
 from src.update import integrity_protection
 
 import sys
@@ -170,7 +169,6 @@ def with_file(path, preload=False):
 
 # 主函数
 def main(input_=None, output_=None, addition_file_name=None):
-    binary_protection()
     # 设置输入输出
     if input_: global_var.set_std_in(input_)
     if output_: global_var.set_std_out(output_)
