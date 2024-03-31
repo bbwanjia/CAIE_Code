@@ -22,6 +22,7 @@ from src.quit import quit
 from src.line_commands import run_command
 from src.update import update
 from src.update import update_expired
+from src.update import integrity_protection
 
 import sys
 import os
@@ -192,6 +193,9 @@ def main(input_=None, output_=None, addition_file_name=None):
 
     if addition_file_name:
         file_paths.add(addition_file_name)
+
+    if not config.get_config('dev') and config.get_config('integrity-protection'):
+        integrity_protection()
 
     #自动更新
     if config.get_config('dev.simulate-update') or (config.get_config('auto-update') and not config.get_config('dev') and update_expired()):

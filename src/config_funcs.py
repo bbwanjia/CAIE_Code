@@ -43,6 +43,8 @@ remote_update = DictConfig({
 
 dev_mod = DictConfig({'true': True, 'false': False})
 
+integrity_protection = DictConfig({'true': True, 'false': False})
+
 branch_update = SetConfig({'stable', 'nightly', 'dev'})
 
 simulate_update = DictConfig({'true': True, 'false': False})
