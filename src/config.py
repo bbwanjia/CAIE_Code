@@ -25,6 +25,7 @@ class Config:
 		self.config = {
 			'remote': _Config('remote', 'https://github.com/iewnfod/CAIE_Code.git', remote_update),
 			'dev': _Config('dev', False, dev_mod),
+			'integrity-protection': _Config('integrity-protection', True, integrity_protection),
 			'branch': _Config('branch', 'stable', branch_update),
 			'rl': _Config('recursion-limit', 1000, recursive_limit),
 			'dev.simulate-update': _Config('dev.simulate-update', False, simulate_update),

@@ -101,6 +101,15 @@ cpc [file_paths] [options]
   - `true`： 启用开发者模式。
   - `false`： 关闭开发者模式。
 
+- `integrity-protection`
+
+    - `true`: 启用完整性保护。
+    - `false`: 禁用完整性保护。
+    
+    > 完整性保护将会阻止任何意外或恶意的解释器修改。
+
+    > 此保护将在开发者模式下被自动禁用。
+
 - 开发者选项
 
   - `dev.simulate-update`

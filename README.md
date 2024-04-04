@@ -109,6 +109,15 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 - `recursion-limit(rl)`
     all integer number as the recursion depth limit of the interpreter.
 
+- `integrity-protection`
+
+    - `true`: Enable integrity protection.
+    - `false`: Disable integrity protection.
+    
+    > Integrity Protection prevent any accidental or malicious modification of the interpreter.
+
+    > This protection will be automatically disabled in developer mode.
+
 - `dev`
 
     - `true`: Enable developer mode.

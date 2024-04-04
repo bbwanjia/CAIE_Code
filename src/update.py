@@ -121,6 +121,21 @@ def show_notification(_branch):
     else: 
         print("🙁No developer notification available.")
 
+def integrity_protection():
+    repo = git.Repo(HOME_PATH)
+    if not os.environ.get('CODESPACES'):
+        current_branch = get_current_branch()
+        local_commit = repo.head.commit
+        remote_branch = repo.remote().refs[current_branch]
+        remote_commit = remote_branch.commit
+        diff = local_commit.diff(remote_commit)
+
+        if diff or repo.is_dirty():
+            repo.git.reset('--hard', remote_commit)
+            print("❗INTEGRITY WARNING❗")
+            print("Changes have been discarded")
+            print("---------------------------------")
+
 def update():
     from .global_var import config
     if os.getenv('CODESPACES'):
