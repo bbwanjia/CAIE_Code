@@ -1,5 +1,5 @@
 import platform
-from .update import VERSION, update, get_commit_hash_msg, get_current_branch
+from .update import VERSION, update, get_commit_hash_msg, get_current_branch, show_notification
 import os
 
 PLATFORM = f'[ {platform.python_implementation()} {platform.python_version()} ] on {platform.system()}'
@@ -22,10 +22,11 @@ def get_value(value):
     return options_dict[value]
 
 def standard_output():
+    import datetime
     print(f'CAIE Pseudocode Interpreter v{VERSION} ({get_current_branch()}/{get_commit_hash_msg()[0]})')
     print(f'Using {PLATFORM}')
     print('Repository at \033[4mhttps://github.com/iewnfod/CAIE_Code/\33[0m')
-    print('Copyright (c) 2023 Iewnfod. ')
+    print(f'Copyright © {datetime.datetime.now().year} Iewnfod. ')
     print('All Rights Reserved. ')
 
 def open_parse_info():
@@ -86,6 +87,9 @@ def show_keywords():
 
 def remove_error():
     options_dict['show_error'] = False
+
+def notification():
+    show_notification(get_current_branch())
 
 def update_version():
     update()
@@ -178,6 +182,7 @@ arguments = [
     Opt('-t', '--time', get_time, 'To show the time for the script to run', False),
     Opt('-k', '--keywords', show_keywords, 'To show all the keywords', True),
     Opt('-ne', '--no-error', remove_error, 'To remove all error messages', False),
+    Opt('-n', '--notification', notification, 'To show notification published by developer (only if this is not expired)', True),
     Opt('-u', '--update', update_version, 'To check or update the version (only if this is installed with git)', True),
     Opt('-c', '--config', change_config, 'To set configs of this interpreter', True, 2),
     Opt('-m', '--migrate', migrate_files, 'To migrate .p files to .cpc in a specified directory', True, 1),

@@ -69,6 +69,7 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 | `-h` | `--help` | To show the help page |
 | `-k` | `--keywords` | To show all the keywords |
 | `-m` | `--migrate` | To migrate `.p` files to `.cpc` in a specified directory |
+| `-n` | `--notification` | To show notification published by developer (only if this is not expired) |
 | `-p` | `--parse` | To show parse information during running |
 | `-t` | `--time` | To show the time for the script to run |
 | `-u` | `--update` | To update the version |
@@ -107,6 +108,15 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 
 - `recursion-limit(rl)`
     all integer number as the recursion depth limit of the interpreter.
+
+- `integrity-protection`
+
+    - `true`: Enable integrity protection.
+    - `false`: Disable integrity protection.
+    
+    > Integrity Protection prevent any accidental or malicious modification of the interpreter.
+
+    > This protection will be automatically disabled in developer mode.
 
 - `dev`
 

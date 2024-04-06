@@ -59,6 +59,9 @@ class Op_mul(AST_Node):
     def exe(self):
         n1 = self.left.exe()
         n2 = self.right.exe()
+        if any(i[1] == 'STRING' for i in [n1, n2]):
+            add_error_message(f'Cannot multiply `{n1[1]}` with `{n2[1]}`', self)
+            return
         try:
             v = n1[0] * n2[0]
             if int(v) == v:
@@ -108,11 +111,13 @@ class Op_connect(AST_Node):
     def exe(self):
         s1 = self.left.exe()
         s2 = self.right.exe()
-        try:
-            return (s1[0] + s2[0], 'STRING')
-        except:
+        if all(i[1] in ('STRING', 'CHAR') for i in [s1, s2]):
+            try:
+                return (s1[0] + s2[0], 'STRING')
+            except:
+                add_error_message(f'Cannot connect `{s1[1]}` with `{s2[1]}`', self)
+        else:
             add_error_message(f'Cannot connect `{s1[1]}` with `{s2[1]}`', self)
-
 
 class Op_mod(AST_Node):
     def __init__(self, left, right, *args, **kwargs):

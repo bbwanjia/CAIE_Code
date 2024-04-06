@@ -56,6 +56,7 @@ cpc [file_paths] [options]
 | `-h` | `--help` | 显示帮助页面 |
 | `-k` | `--keywords` | 显示所有的关键字 |
 | `-m` | `--migrate` | 将一个目录中的所有 `.p` 文件切换为 `.cpc` |
+| `-n` | `--notification` | 显示由开发者发布的未过期通知 |
 | `-p` | `--parse` | 显示所有解析的信息 |
 | `-t` | `--time` | 显示运行脚本花费的时间 |
 | `-u` | `--update` | 更新此解释器的版本 |
@@ -99,6 +100,15 @@ cpc [file_paths] [options]
 
   - `true`： 启用开发者模式。
   - `false`： 关闭开发者模式。
+
+- `integrity-protection`
+
+    - `true`: 启用完整性保护。
+    - `false`: 禁用完整性保护。
+    
+    > 完整性保护将会阻止任何意外或恶意的解释器修改。
+
+    > 此保护将在开发者模式下被自动禁用。
 
 - 开发者选项
 
