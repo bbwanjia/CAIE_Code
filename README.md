@@ -622,6 +622,10 @@ The following items give the `DATATYPE`, its description, and the default value 
 - [ ] Increase running speed and stability.
 - [ ] Implement bootstrap.
 
+## Sponsors
+<a herf="https://1password.com/">
+    <img src="https://www.vectorlogo.zone/logos/1password/1password-ar21.svg" height="100" alt="1Password">
+
 ## Author and Contributors
 <a href="https://github.com/iewnfod/CAIE_Code/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=iewnfod/CAIE_Code">
