@@ -122,8 +122,8 @@ def show_notification(_branch):
         print("🙁No developer notification available.")
 
 def integrity_protection():
-    repo = git.Repo(HOME_PATH)
     if not os.environ.get('CODESPACES'):
+        repo = git.Repo(HOME_PATH)
         current_branch = get_current_branch()
         local_commit = repo.head.commit
         remote_branch = repo.remote().refs[current_branch]

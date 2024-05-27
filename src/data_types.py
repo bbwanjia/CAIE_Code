@@ -4,6 +4,8 @@ class base:
         self.is_struct = False
         self.current_space = None
         self.is_const = False
+        self.value = None
+        self.is_enum = False
 
     def __str__(self):
         return str(self.value)
@@ -151,16 +153,6 @@ class ARRAY(base):
                         v[i] = stack.structs[target](v[i][0])
                     except:
                         add_stack_error_message(f'Cannot change value `{str(v[i][0])}` into `{target}`')
-
-from enum import Enum
-class ENUM(base):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.value = None
-        self.type = 'ENUM'
-
-    def set_value(self, value):
-        self.value = Enum(self.name, value)
 
 class POINTER(base):
     def __init__(self, value=None, *args, **kwargs):

@@ -592,6 +592,9 @@ NEXT i
 - [ ] 提高运行速度与效率
 - [ ] 实现自举
 
+## 赞助商
+<a herf="https://1password.com/">
+    <img src="https://www.vectorlogo.zone/logos/1password/1password-ar21.svg" height="100" alt="1Password">
 
 ## 作者与贡献者
 <a href="https://github.com/iewnfod/CAIE_Code/graphs/contributors">
