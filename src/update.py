@@ -107,15 +107,15 @@ def show_notification(_branch):
                 deprecation_date_str = notification_data['deprecation']['deprecation_date']
                 deprecation_date = datetime.strptime(deprecation_date_str, '%Y-%m-%d')
                 if current_time > deprecation_date:
-                    print(f"👉{deprecate_keyword}👈 has become deprecated since {notification_data['deprecation']['deprecation_date']}")
+                    print(f"👉{deprecate_keyword}👈 has become deprecated since {notification_data['deprecation']['deprecation_date']}\033[0m")
                 else:
-                    print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}")
+                    print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}\033[0m")
             elif notification_data['type'] == 'update':
                 print(f"\033[1m🎉UPDATE NOTIFICATION🎉\33[1m")
-                print(f"👉{notification_data['content']}")
+                print(f"👉{notification_data['content']}\033[0m")
             elif notification_data['type'] == 'add':
                 print(f"\033[1m🎉NEW FEATURE NOTIFICATION🎉\33[1m")
-                print(f"👉{notification_data['content']}")
+                print(f"👉{notification_data['content']}\033[0m")
         else: 
             print("🙁No developer notification available.")
     else: 
