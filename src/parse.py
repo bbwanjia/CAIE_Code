@@ -393,6 +393,18 @@ def p_declare_array_parameter(p):
         elif p[1] == 'BYVAL':
             p[0] = AST.Declare_arr_parameter(p[2], p[6], False, p=p)
 
+def p_new_declare_array_parameter(p):
+    """declare_parameter : ID LEFT_SQUARE RIGHT_SQUARE COLON ID
+            | BYREF ID LEFT_SQUARE RIGHT_SQUARE COLON ID
+            | BYVAL ID LEFT_SQUARE RIGHT_SQUARE COLON ID"""
+    if len(p) == 6:
+        p[0] = AST.Declare_arr_parameter(p[1], p[5], p=p)
+    else:
+        if p[1] == 'BYREF':
+            p[0] = AST.Declare_arr_parameter(p[2], p[6], True, p=p)
+        elif p[1] == 'BYVAL':
+            p[0] = AST.Declare_arr_parameter(p[2], p[6], False, p=p)
+
 def p_parameters(p):
     """parameters : parameters COMMA expression
             | expression"""

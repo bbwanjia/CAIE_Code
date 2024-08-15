@@ -144,6 +144,8 @@ class ARRAY(base):
         if v == None:
             v = self.value
         for i in v.keys():
+            if i == "left" or i == "right":
+                continue
             if v[i][1] == 'ARRAY':
                 self.to_target(target, v[i])
             else:
