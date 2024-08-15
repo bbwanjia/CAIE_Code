@@ -11,4 +11,4 @@ FUNCTION LinearSearch(Names[] : STRING, SearchName : STRING) RETURNS INTEGER
     RETURN -1
 ENDFUNCTION
 
-OUTPUT LinearSearch(Students, "1")
+OUTPUT LinearSearch(Students, "Peter")
