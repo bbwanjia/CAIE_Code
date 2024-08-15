@@ -103,6 +103,10 @@ class For(AST_Node):
                 # 执行内部操作
                 self.body_statement.exe()
 
+                # 检查是否有 return 需要退出
+                if stack.return_request:
+                    break
+
         else:
             add_error_message(f'Expect `INTEGER` for index and step, but found `{left[1]}`, `{right[1]}` and `{step[1]}`', self)
 
@@ -233,6 +237,10 @@ class Repeat(AST_Node):
     def exe(self):
         while 1:
             self.true_statement.exe()
+            # 检查是否有 return 需要退出
+            if stack.return_request:
+                break
+            # 检查是否满足条件需要退出
             if self.condition.exe()[0]:
                 break
 
@@ -249,6 +257,9 @@ class While(AST_Node):
     def exe(self):
         while self.condition.exe()[0]:
             self.true_statement.exe()[0]
+            # 检查是否有 return 需要退出
+            if stack.return_request:
+                break
 
 class Pass(AST_Node):
     def __init__(self, *args, **kwargs):
