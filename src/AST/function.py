@@ -17,9 +17,9 @@ class Function(AST_Node):
 
     def get_tree(self, level=0):
         if self.parameters:
-            return LEVEL_STR * level + self.type + ' ' + str(self.id) + '\n' + self.parameters.get_tree(level+1) + '\n' + self.statements.get_tree(level+1) + '\n' + LEVEL_STR * (level+1) + str(self.private)
+            return LEVEL_STR * level + self.type + ' ' + str(self.id) + '\n' + self.parameters.get_tree(level+1) + '\n' + LEVEL_STR * (level+1) + 'RETURNS ' + self.returns + '\n' + self.statements.get_tree(level+1) + '\n' + LEVEL_STR * (level+1) + str(self.private)
         else:
-            return LEVEL_STR * level + self.type + ' ' + str(self.id) + '\n' + self.statements.get_tree(level+1) + '\n' + LEVEL_STR * (level+1) + str(self.private)
+            return LEVEL_STR * level + self.type + ' ' + str(self.id) + '\n' + LEVEL_STR * (level+1) + 'RETURNS ' + self.returns + '\n' + self.statements.get_tree(level+1) + '\n' + LEVEL_STR * (level+1) + str(self.private)
 
     def exe(self):
         if self.private: self.current_space = stack.current_space()
