@@ -16,7 +16,7 @@ class Output(AST_Node):
 
     def exe(self):
         v = self.value.exe()
-        print_(v if v != None else '', end=self.end)
+        print_(v, end=self.end)
 
 class Output_expression(AST_Node):
     def __init__(self, *args, **kwargs):
@@ -37,6 +37,8 @@ class Output_expression(AST_Node):
         result = []
         for i in self.expressions:
             t = i.exe()
+            if t == None:
+                continue
             if t[1] == 'ARRAY':
                 result.append(str(t))
             elif t[1] == 'BOOLEAN':

@@ -28,7 +28,10 @@
 
 ### Installation
 
-0. For **macOS** users, you can install directly using **CAIE_Code_Installer.dmg** from the [releases](https://github.com/iewnfod/CAIE_Code/releases/tag/v0.1.4-pkg) page.
+0. For **macOS** users, you can install directly using following scripts:
+```shell
+curl -fsSL https://atcrea.tech/cpc.sh | sh
+```
 
   *For other users...*
 
@@ -113,7 +116,7 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 
     - `true`: Enable integrity protection.
     - `false`: Disable integrity protection.
-    
+
     > Integrity Protection prevent any accidental or malicious modification of the interpreter.
 
     > This protection will be automatically disabled in developer mode.

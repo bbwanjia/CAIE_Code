@@ -18,9 +18,31 @@ class Enumerate_type(AST_Node):
         return LEVEL_STR * level + self.type + '\n' + LEVEL_STR * (level+1) + str(self.id) + '\n' + self.items.get_tree(level+1)
 
     def exe(self):
+        that = self
         items = self.items.exe()
-        stack.new_variable(self.id, 'ENUM')
-        stack.set_variable(self.id, items, 'ENUM')
+
+        class e(base):
+            def __init__(self, name=that.id, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.name = name
+                self.type = name
+                self.items = items
+                self.is_enum = True
+
+            def __getitem__(self, key):
+                if key == 1:
+                    return self.type
+                else:
+                    return self
+
+            def set_value(self, value):
+                if value in self.items:
+                    self.value = value
+                else:
+                    add_error_message(f'Invalid value `{value}` for enum `{self.type}`', self)
+
+        stack.add_struct(self.id, e)
+        stack.new_variable(self.id, self.id)
 
 class Enumerate_items(AST_Node):
     def __init__(self, *args, **kwargs):
@@ -198,8 +220,12 @@ class Composite_type_expression(AST_Node):
     def exe(self):
         obj = self.exp1.exe()[0]
         # 判断一下是不是枚举类型
-        if obj[1] == 'ENUM':
-            return (obj[0].__members__[self.id], 'ENUM')
+        if obj.is_enum:
+            if self.exp2.id in obj.items:
+                return (self.exp2.id, 'STRING')
+            else:
+                add_error_message(f'Invalid value `{self.exp2.id}` for enum `{obj.type}`', self)
+                return
         # 否则，按照正常自定义类型的操作运行
         # 将此对象的空间放入主空间列表
         stack.push_subspace(obj.space)

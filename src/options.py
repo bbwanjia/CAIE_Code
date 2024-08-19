@@ -93,6 +93,7 @@ def notification():
 
 def update_version():
     update()
+    quit()
 
 def change_config(opt_name, value):
     from .global_var import set_config
