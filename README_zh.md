@@ -7,7 +7,7 @@
 <h3 align="center">CAIE 伪代码解释器</h3>
 </p>
 <p align="center">
-<a href="./README_cn.md">中文</a> | <a href="./README.md">English</a>
+<a href="./README_zh.md">中文</a> | <a href="./README.md">English</a>
 </p>
 
 ## 安装与使用
@@ -21,6 +21,13 @@
 3. `cargo`命令
 
 ### 正式安装
+0. 对于 macOS 用户，可使用以下脚本一键安装：
+```shell
+curl -fsSL https://atcrea.tech/cpc.sh | sh
+```
+
+ *对于其他用户...*
+
 1. 克隆此项目
     ```git clone https://github.com/iewnfod/CAIE_Code.git```
 2. MacOS 用户可直接运行Releases内的 [`CAIE_Code_Installer.dmg`](https://github.com/iewnfod/CAIE_Code/releases/tag/v0.1.4-pkg)，其他系统用户请继续根据`3, 4`步进行安装
@@ -105,7 +112,7 @@ cpc [file_paths] [options]
 
     - `true`: 启用完整性保护。
     - `false`: 禁用完整性保护。
-    
+
     > 完整性保护将会阻止任何意外或恶意的解释器修改。
 
     > 此保护将在开发者模式下被自动禁用。
