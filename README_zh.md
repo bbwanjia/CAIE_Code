@@ -30,10 +30,9 @@ curl -fsSL https://atcrea.tech/cpc.sh | sh
 
 1. 克隆此项目
     ```git clone https://github.com/iewnfod/CAIE_Code.git```
-2. MacOS 用户可直接运行Releases内的 [`CAIE_Code_Installer.dmg`](https://github.com/iewnfod/CAIE_Code/releases/tag/v0.1.4-pkg)，其他系统用户请继续根据`3, 4`步进行安装
-3. 进入项目
+2. 进入项目
     ```cd CAIE_Code```
-4. 运行
+3. 运行
     * 二进制文件存在于`bin`中，请将自己系统对应的二进制文件加入到`PATH`中
     * `MacOS`若无法正常运行其中的二进制文件，可尝试自己编译 [`build.sh`](./build.sh)
     * `Windows`若无法正常运行，也可尝试自己编译 [`build.ps1`](./build.ps1)
