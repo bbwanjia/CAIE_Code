@@ -60,6 +60,10 @@ reserved = {
     "DELETE",
     "PASS",
     "IMPORT",
+    "SUPER",
+    "SET",
+    "DEFINE",
+    "_OUTPUT",
 }
 
 tokens = (

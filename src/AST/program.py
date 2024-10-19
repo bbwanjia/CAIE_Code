@@ -2,7 +2,8 @@ from .data import *
 from ..AST_Base import *
 from ..global_var import *
 from .array import *
-from os.path import exists
+from os import path as Path
+from os import mkdir
 
 class Statements(AST_Node):
     def __init__(self, *args, **kwargs):
@@ -102,8 +103,9 @@ class For(AST_Node):
                 # 执行内部操作
                 self.body_statement.exe()
 
-            # 循环结束，删除变量
-            stack.remove_variable(self.id)
+                # 检查是否有 return 需要退出
+                if stack.return_request:
+                    break
 
         else:
             add_error_message(f'Expect `INTEGER` for index and step, but found `{left[1]}`, `{right[1]}` and `{step[1]}`', self)
@@ -135,6 +137,20 @@ class Case_array(AST_Node):
 
     def exe(self):
         value = Array_get(self.id, self.indexes, lineno=self.lineno, lexpos=self.lexpos)
+        self.cases.exe(value)
+
+class NewCase(AST_Node):
+    def __init__(self, expr, cases, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = 'NEW_CASE'
+        self.expr = expr
+        self.cases = cases
+
+    def get_tree(self, level=0):
+        return LEVEL_STR * level + self.type + '\n' + self.expr.get_tree(level+1) + '\n' + self.cases.get_tree(level+1)
+
+    def exe(self):
+        value = self.expr.exe()
         self.cases.exe(value)
 
 class Cases(AST_Node):
@@ -221,6 +237,10 @@ class Repeat(AST_Node):
     def exe(self):
         while 1:
             self.true_statement.exe()
+            # 检查是否有 return 需要退出
+            if stack.return_request:
+                break
+            # 检查是否满足条件需要退出
             if self.condition.exe()[0]:
                 break
 
@@ -237,6 +257,9 @@ class While(AST_Node):
     def exe(self):
         while self.condition.exe()[0]:
             self.true_statement.exe()[0]
+            # 检查是否有 return 需要退出
+            if stack.return_request:
+                break
 
 class Pass(AST_Node):
     def __init__(self, *args, **kwargs):
@@ -263,13 +286,26 @@ class Import(AST_Node):
         last_file = get_running_path()
         last_mod = get_running_mod()
         # 获取要导入的路径
+        default_package_path = config.get_config('default-package-path')
+        if not Path.exists(default_package_path):
+            mkdir(default_package_path)
+
         path = self.target.exe()[0]
-        if exists(path):
+        if Path.splitext(path)[1] != '.cpc':
+            path += '.cpc'
+        final_path = path
+        # 尝试选择路径
+        if Path.exists(Path.join(default_package_path, path)):
+            final_path = Path.join(default_package_path, path)
+        if Path.exists(path):
+            final_path = path
+        # 导入
+        if Path.exists(final_path):
             # 运行导入程序
             from main import with_file
-            with_file(path)
+            with_file(final_path)
             # 修改回之前的路径，以及类型
             set_running_path(last_file)
             set_running_mod(last_mod)
         else:
-            add_error_message(f'Cannot find `{path}` to import', self)
+            add_error_message(f'Cannot find `{final_path}` to import', self)

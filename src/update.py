@@ -3,7 +3,9 @@ from .animation import new_animation
 import os
 import git
 import requests
+import json
 from time import time
+from datetime import datetime
 
 VERSION = ''
 
@@ -46,6 +48,7 @@ def check_update(repo: git.Repo, remote: git.Remote):
     elif local_commit_time > remote_commit_time:
         print(f"Good! Good! You are faster than \033[1m{get_current_branch()}\033[0m branch!")
         print("At", *get_commit_hash_msg())
+        show_notification(get_current_branch())
         global super_fast
         super_fast = True
         return False
@@ -55,27 +58,89 @@ def check_update(repo: git.Repo, remote: git.Remote):
 def _update(remote, repo):
     try:
         from .global_var import config
-        branch = config.get_config('branch') if not config.get_config('dev') else 'dev'
-        repo.git.reset('--hard', f'origin/{branch}')
-        repo.git.checkout(branch)
-        remote.pull()
-        print('\033[1mUpdate Successful\033[0m')
+        if not config.get_config('dev.simulate-update'):
+            branch = config.get_config('branch') if not config.get_config('dev') else 'dev'
+            repo.git.reset('--hard', f'origin/{branch}')
+            repo.git.checkout(branch)
+            remote.pull()
+            print('\033[1mUpdate Successful\033[0m')
+            show_notification(get_current_branch())
+        else:
+            print('\033[1mSimulate Update Successful\033[0m')
+            show_notification(get_current_branch())
     except:
         print('\033[31;1mFailed to Update\033[0m')
 
 def get_current_branch():
+    if os.environ.get('CODESPACES'):
+        return 'online'
     repo = git.Repo(HOME_PATH)
     current_branch = repo.git.rev_parse("--abbrev-ref", "HEAD")
     return current_branch
 
 def get_commit_hash_msg():
-    repo = git.Repo(HOME_PATH)
-    latest_commit_hash = repo.head.reference.commit.hexsha[:7]
-    latest_commit_message = repo.head.reference.commit.message.strip()
-    return latest_commit_hash, latest_commit_message
+    if os.environ.get('CODESPACES'):
+        return '000000', 'Online IDE', '000000', 'Online IDE'
+    else:
+        repo = git.Repo(HOME_PATH)
+        from .global_var import config
+        from re import sub
+        remote_branch = config.get_config('branch') if not config.get_config('dev') else 'dev'
+        latest_commit_hash = repo.rev_parse(f'origin/{remote_branch}').hexsha[:7]
+        latest_commit_message = repo.rev_parse(f'origin/{remote_branch}').message.strip()
+        local_commit_hash = repo.head.commit.hexsha[:7]
+        local_commit_message = repo.head.reference.commit.message.strip()
+        return latest_commit_hash, latest_commit_message, local_commit_hash, local_commit_message
+
+def show_notification(_branch):
+    f = os.path.join(HOME_PATH, 'notification', 'notification.json')
+    with open(f, 'r') as file:
+        notification_data = json.load(file)
+    if _branch in notification_data['branch']:
+        expiry_date_str = notification_data['expiry_date']
+        current_time = datetime.now()
+        expiry_date = datetime.strptime(expiry_date_str, '%Y-%m-%d')
+        if current_time < expiry_date:
+            if notification_data['type'] == 'deprecate':
+                print(f"\033[1m❗DEPRECATED NOTIFICATION❗\33[1m")
+                deprecate_keyword = ', '.join(notification_data['deprecation']['keyword'])
+                deprecation_date_str = notification_data['deprecation']['deprecation_date']
+                deprecation_date = datetime.strptime(deprecation_date_str, '%Y-%m-%d')
+                if current_time > deprecation_date:
+                    print(f"👉{deprecate_keyword}👈 has become deprecated since {notification_data['deprecation']['deprecation_date']}\033[0m")
+                else:
+                    print(f"👉{deprecate_keyword}👈 will be deprecated at {notification_data['deprecation']['deprecation_date']}\033[0m")
+            elif notification_data['type'] == 'update':
+                print(f"\033[1m🎉UPDATE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}\033[0m")
+            elif notification_data['type'] == 'add':
+                print(f"\033[1m🎉NEW FEATURE NOTIFICATION🎉\33[1m")
+                print(f"👉{notification_data['content']}\033[0m")
+        else: 
+            print("🙁No developer notification available.")
+    else: 
+        print("🙁No developer notification available.")
+
+def integrity_protection():
+    if not os.environ.get('CODESPACES'):
+        repo = git.Repo(HOME_PATH)
+        current_branch = get_current_branch()
+        local_commit = repo.head.commit
+        remote_branch = repo.remote().refs[current_branch]
+        remote_commit = remote_branch.commit
+        diff = local_commit.diff(remote_commit)
+
+        if diff or repo.is_dirty():
+            repo.git.reset('--hard', remote_commit)
+            print("❗INTEGRITY WARNING❗")
+            print("Changes have been discarded")
+            print("---------------------------------")
 
 def update():
     from .global_var import config
+    if os.getenv('CODESPACES'):
+        print('You are using a GitHub Codespace, where update function is not allowed.')
+        return
     git_remote = config.get_config('remote')
     # 检查是否能连接到 GitHub
     if git_remote == config.get_default_config('remote') and not check_github_connectivity():
@@ -86,17 +151,15 @@ def update():
     repo = git.Repo(HOME_PATH)
     remote = repo.remote()
     if config.get_config('dev'):
-        print('In a developer mod, your remote will not be changed by config and branch will be locked in dev.')
-        print('You can close the developer mod by using `cpc -c dev false`.')
+        print('In a developer mode, your remote will not be changed by config and branch will be locked in dev.')
+        print('You can close the developer mode by using `cpc -c dev false`.')
     else:
         remote.set_url(git_remote)
-    # 获取当前commit记录
-    latest_commit_hash, latest_commit_message = get_commit_hash_msg()
+
+    #获取提交信息
+    latest_commit_hash, latest_commit_message, local_commit_hash, local_commit_message = get_commit_hash_msg()
 
     if new_animation('Checking Update', 3, check_update, failed_msg='Failed to Check Update', repo=repo, remote=remote):
-        # 更新后再次获取新的commit记录
-        _update(remote, repo)
-        latest_commit_hash, latest_commit_message = get_commit_hash_msg()
         # 询问是否更新
         u = input(f'There is a new \033[1m{get_current_branch()}\033[0m version of the program\n{latest_commit_hash}: {latest_commit_message}\nDo you want to update it? [Y/n] ').strip().lower()
         if u == '' or u == 'y':
@@ -106,6 +169,5 @@ def update():
             print('Stop Updating')
     else:
         if not super_fast:
-            # 更新后再次获取新的commit记录
-            latest_commit_hash, latest_commit_message = get_commit_hash_msg()
-            print(f'Good! You are using the latest \033[1m{get_current_branch()}\033[0m version!\nAt {latest_commit_hash}: {latest_commit_message}')
+            print(f'Good! You are using the latest \033[1m{get_current_branch()}\033[0m version!\nAt {local_commit_hash}: {local_commit_message}')
+            show_notification(get_current_branch())

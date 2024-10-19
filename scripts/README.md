@@ -35,6 +35,10 @@
     ```
     Sort(BYREF arr : ARRAY, BYVAL left : INTEGER, right : INTEGER)
     ```
+* `QuickSort` quick sort
+    ```
+    QuickSort(BYREF a : ARRAY, BYVAL low : INTEGER, high : INTEGER)
+    ```
 
 ## [String](./string.cpc)
 * `Split`: truncate a string
@@ -89,11 +93,27 @@
     ```
     StartsWith(base : STRING, prefix : STRING) RETURNS BOOLEAN
     ```
+* `STR_TO_NUM`: transform a string `s` to a number
+    ```
+    STR_TO_NUM(s : STRING) RETURNS REAL
+    ```
+* `NUM_TO_STR`: transform a number `s` to a string
+    ```
+    NUM_TO_STR(s : REAL) RETURNS STRING
+    ```
+* `CHR`: get the ASCII value of an integer `n`
+    ```
+    CHR(n : INTEGER) RETURNS CHAR
+    ```
+* `ORD`: get the ASCII index of a char
+    ```
+    ORD(s : CHAR) RETURNS INTEGER
+    ```
 
 ## [Time](./time.cpc)
 * `Time`: get current timestamp
     ```
-    Time RETURNS REAL
+    Time() RETURNS REAL
     ```
 
 ## [Import](./import.cpc)
@@ -101,19 +121,16 @@
     ```
     Import(target : STRING) RETURNS ImportObj
     ```
-
 ## [Array](./array.cpc)
-* ArrayOne sets the contents of an array of custom length and width to 1
+* `ArrayOne` sets the contents of an array of custom length and width to 1
     ```
     ArrayOne(BYVAL row : INTEGER, col : INTEGER) RETURNS ARRAY
     ```
-
-* ArrayArrange generates evenly spaced n numbers within the closure range
+* `ArrayArrange` generates evenly spaced n numbers within the closure range
     ```
     ArrayArrange(BYVAL low : INTEGER, high: INTEGER, div : REAL) RETURNS ARRAY
     ```
-
-* ArrayLinSpace generates n evenly spaced numbers in the closure range
+* `ArrayLinSpace` generates n evenly spaced numbers in the closure range
     ```
     ArrayLinSpace(BYVAL low : INTEGER, high: INTEGER, num : INTEGER) RETURNS ARRAY
     ```

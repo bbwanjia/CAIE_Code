@@ -32,6 +32,8 @@
         "STRUCT",
         "Ucase",
         "UMINUS",
-        "UPLUS"
+        "UPLUS",
+        "VARTYPE",
+        "WRITEFILE"
     ]
 }

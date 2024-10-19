@@ -25,28 +25,6 @@ FUNCTION Split(s : STRING, sep : STRING) RETURNS ARRAY
     RETURN returnArr
 ENDFUNCTION
 
-FUNCTION Lcase(s : STRING) RETURNS STRING
-    DECLARE result : STRING
-    result <- ""
-
-    FOR i <- 1 TO LENGTH(s)
-        result <- result & LCASE(CHAR(MID(s, i, 1)))
-    NEXT i
-
-    RETURN result
-ENDFUNCTION
-
-FUNCTION Ucase(s : STRING) RETURNS STRING
-    DECLARE result : STRING
-    result <- ""
-
-    FOR i <- 1 TO LENGTH(s)
-        result <- result & UCASE(CHAR(MID(s, i, 1)))
-    NEXT i
-
-    RETURN result
-ENDFUNCTION
-
 FUNCTION TrimStart(s : STRING) RETURNS STRING
     DECLARE len : INTEGER
     len <- LENGTH(s)
@@ -169,4 +147,32 @@ FUNCTION StartsWith(base : STRING, prefix : STRING) RETURNS BOOLEAN
     ENDIF
 
     RETURN MID(base, 1, prefixLen) = prefix
+ENDFUNCTION
+
+FUNCTION STR_TO_NUM(s : STRING) RETURNS REAL
+    RETURN REAL(s)
+ENDFUNCTION
+
+FUNCTION NUM_TO_STR(s : REAL) RETURNS STRING
+    IF INT(s) = s THEN
+        RETURN STRING(INT(s))
+    ELSE
+        RETURN STRING(s)
+    ENDIF
+ENDFUNCTION
+
+FUNCTION CHR(n : INTEGER) RETURNS CHAR
+    DECLARE r : STRING
+    r <- PYTHON("_result=chr(n)", n)
+    RETURN r
+ENDFUNCTION
+
+FUNCTION ORD(s : CHAR) RETURNS INTEGER
+    DECLARE r : INTEGER
+    r <- PYTHON("_result=ord(s)", s)
+    RETURN r
+ENDFUNCTION
+
+FUNCTION SUBSTRING(s : STRING, start : INTEGER, size : INTEGER) RETURNS STRING
+    RETURN MID(s, start, size)
 ENDFUNCTION

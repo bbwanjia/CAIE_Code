@@ -1,0 +1,14 @@
+DECLARE Students : ARRAY[1:5] OF STRING
+Students <- ["John", "Mary", "Peter", "Jane", "Tom"]
+
+FUNCTION LinearSearch(Names[] : STRING, SearchName : STRING) RETURNS INTEGER
+    DECLARE index : INTEGER
+    FOR index <- 1 TO LENGTH(Names)
+        IF Names[index] = SearchName THEN
+            RETURN index
+        ENDIF
+    NEXT index
+    RETURN -1
+ENDFUNCTION
+
+OUTPUT LinearSearch(Students, "Peter")

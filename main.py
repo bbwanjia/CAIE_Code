@@ -5,6 +5,7 @@ test_requirements()
 from ply import yacc
 from ply import lex
 from chardet import detect
+import signal
 # 导入色彩基础库，保证\033能正确的转译
 import colorama
 colorama.init()
@@ -21,6 +22,7 @@ from src.quit import quit
 from src.line_commands import run_command
 from src.update import update
 from src.update import update_expired
+from src.update import integrity_protection
 
 import sys
 import os
@@ -31,6 +33,12 @@ preline = '>'
 multi_preline = '.'
 home_path = HOME_PATH
 
+# 处理keyboard interrupt
+def signal_handler(_signal, _frame):
+    quit(1)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 # 错误的argument
 def wrong_argument(msg):
@@ -186,6 +194,9 @@ def main(input_=None, output_=None, addition_file_name=None):
     if addition_file_name:
         file_paths.add(addition_file_name)
 
+    if not config.get_config('dev') and config.get_config('integrity-protection'):
+        integrity_protection()
+
     #自动更新
     if config.get_config('dev.simulate-update') or (config.get_config('auto-update') and not config.get_config('dev') and update_expired()):
         update()
@@ -221,10 +232,10 @@ if __name__ == '__main__':
         main()
     except EOFError:
         print("EXIT")
-        quit(0)
+        quit(2)
     except KeyboardInterrupt:
         print('Keyboard Interrupt')
-        quit(0)
+        quit(1)
     except Exception as e:
         print(e)
-        quit(1)
+        quit(3)

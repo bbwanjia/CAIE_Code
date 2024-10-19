@@ -1,6 +1,5 @@
 # CAIE Code (cpc)
 
-<br/>
 <p align="center">
 <a href="./assets/cpc.svg">
 <img src="./assets/cpc.svg" width="100" height="100" alt="logo">
@@ -12,6 +11,8 @@
 </p>
 
 ## Installation and Update
+
+> [Online Version](https://github.com/createchstudio/caie-code-environment)
 
 ### Installation Preliminaries
 
@@ -27,7 +28,10 @@
 
 ### Installation
 
-0. For **macOS** users, you can install directly using **CAIE_Code_Installer.dmg** from the [releases](https://github.com/iewnfod/CAIE_Code/releases/tag/v0.1.4-pkg) page.
+0. For **macOS** users, you can install directly using following scripts:
+```shell
+curl -fsSL https://atcrea.tech/cpc.sh | sh
+```
 
   *For other users...*
 
@@ -50,7 +54,7 @@
 ### Update
 * If you followed the instructions and used `git` or PKG to install `cpc`, you can update easily using `cpc -u`.
 
-* An auto-update feature is introduced after `dc0cd71` to automatically detect updates once a day.
+* An auto-update feature is introduced after `dc0cd71` to automatically detect updates once a week.
 
 * Otherwise, you should manually re-install the whole project.
 
@@ -64,17 +68,20 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 | Mnemonic | Option | Description |
 | -------- | ------ | ----------- |
 | `-c` | `--config` | To set configs of this interpreter |
+| `-d` | `--document` | To show the official document |
 | `-h` | `--help` | To show the help page |
 | `-k` | `--keywords` | To show all the keywords |
 | `-m` | `--migrate` | To migrate `.p` files to `.cpc` in a specified directory |
+| `-n` | `--notification` | To show notification published by developer (only if this is not expired) |
 | `-p` | `--parse` | To show parse information during running |
 | `-t` | `--time` | To show the time for the script to run |
 | `-u` | `--update` | To update the version |
 | `-v` | `--version` | To show the version of this interpreter |
 | `-gt` | `--get-tree` | To show the tree of the program after being parsed |
 | `-lc` | `--list-configs` | To list all the configs of the interpreter |
-| `-rc` | `--reset-configs` | To reset all the configs of the interpreter |
 | `-ne` | `--no-error` | To remove all error messages |
+| `-rc` | `--reset-configs` | To reset all the configs of the interpreter |
+| `-init` | `--init-requirements` | To install all dependences |
 
 ### Config
 
@@ -105,11 +112,20 @@ It runs the entire file if `filepath` is provided, otherwise, it enters playgrou
 - `recursion-limit(rl)`
     all integer number as the recursion depth limit of the interpreter.
 
+- `integrity-protection`
+
+    - `true`: Enable integrity protection.
+    - `false`: Disable integrity protection.
+
+    > Integrity Protection prevent any accidental or malicious modification of the interpreter.
+
+    > This protection will be automatically disabled in developer mode.
+
 - `dev`
-    
+
     - `true`: Enable developer mode.
     - `false`: Disable developer mode.
-    
+
 - Developer Options
 
     - `dev.simulate-update`
@@ -148,44 +164,43 @@ If it still fails after re-installation, please report it to us on the [issue pa
 - processor: Apple M1
 - RAM: 8GB
 - Cores: 8 (4 efficient, 4 performance)
-- OS: macOS 13.3.1 (22E261)
+- OS: macOS 14.1.1 (23B81)
 - Python version: PyPy 3.9.16
 
 ### Basic Tests
-- assignment: 10m/s
+- assignment: 1200w/s
 ```
 DECLARE a : INTEGER
+FOR i <- 1 TO 12000000
+    a <- i
+NEXT i
+```
+
+- explicit conversion and assignment: 760w/s
+```
+DECLARE a : STRING
+FOR i <- 1 TO 7600000
+    a <- STRING(i)
+NEXT i
+```
+
+- implicit conversion and assignment: 1000w/s
+```
+DECLARE a : STRING
 FOR i <- 1 TO 10000000
     a <- i
 NEXT i
 ```
 
-- explicit conversion and assignment: 7.4m/s
+- print to terminal: 65w/s
 ```
-DECLARE a : STRING
-FOR i <- 1 TO 7400000
-    a <- STRING(i)
-NEXT i
-```
-
-- implicit conversion and assignment: 9.2m/s
-```
-DECLARE a : STRING
-FOR i <- 1 TO 9200000
-    a <- i
-NEXT i
-```
-
-- print to terminal: 720k/s
-```
-DECLARE a : STRING
-FOR i <- 1 TO 9200000
-    a <- i
+FOR i <- 1 TO 650000
+    OUTPUT i
 NEXT i
 ```
 
 ### Computation Tests
-- [generating 100k randoms and shell sorting](https://github.com/iewnfod/CAIE_Code/blob/master/test/sort_test.cpc): about 2.5s
+- [generating 100k randoms and shell sorting](test/sort_test.cpc): about 3.5s
 
 
 ## Standards
@@ -299,7 +314,7 @@ The following items give the `DATATYPE`, its description, and the default value 
         IF <condition> THEN
             <statements>
         ENDIF
-        
+
         IF <condition> THEN
             <statements>
         ELSE
@@ -307,7 +322,7 @@ The following items give the `DATATYPE`, its description, and the default value 
         ENDIF
         ```
     * CASE statements
-        > IMPORTANT: official standards do not have semicolons;` here
+        > IMPORTANT: official standards do not have semicolons `;` here
         ```
         CASE OF <identifier>
             <value> : <statements>;
@@ -337,18 +352,18 @@ The following items give the `DATATYPE`, its description, and the default value 
 7. functions
     * functions without a return value (procedure)
         ```
-        PROCEDURE <identifier>
+        PROCEDURE <identifier> ()
             <statements>
         ENDPROCEDURE
-        
+
         PROCEDURE <identifier> (<param> : <data type>, ...)
             <statements>
         ENDPROCEDURE
         ```
     * call a procedure
         ```
-        CALL <identifier>
-        
+        CALL <identifier> ()
+
         CALL <identifier> (<value>, ...)
         ```
     * functions with return values
@@ -357,7 +372,7 @@ The following items give the `DATATYPE`, its description, and the default value 
             <statements>
             RETURN <value>
         ENDFUNCTION
-        
+
         FUNCTION <identifier> (<param> : <data type>, ...) RETURNS <data type>
             <statements>
             RETURN <value>
@@ -365,7 +380,7 @@ The following items give the `DATATYPE`, its description, and the default value 
     * call a function with return values
         ```
         <identifier> ()
-        
+
         <identifier> (<value>, ...)
         ```
     * Before the parameters of those sub-routines, you *can* use `BYREF` or `BYVAL` to force the program to pass those parameters by reference or by-value respectively. If no `BYREF` nor `BYVAL` is given, the program will follow the prior parameter. If the program cannot find a clear indication it will, by default pass parameters by value.
@@ -414,28 +429,72 @@ The following items give the `DATATYPE`, its description, and the default value 
             <statements>
         ENDTYPE
         ```
+10. Object Oriented Programme
+    * define an object
+        ```
+        CLASS <identifier>
+            PUBLIC PROCEDURE NEW (<params>)
+                <statements>
+            ENDPROCEDURE
+            <statements>
+        ENDCLASS
+        ```
+    * private or public variable
+        ```
+        PRIVATE <identifier> : <type>
+        PUBLIC <identifier> : <type>
+        ```
+    * private or public procedure and function
+        ```
+        PRIVATE PROCEDURE <identifier> (<params>)
+            <statements>
+        ENDPROCEDURE
+
+        PUBLIC PROCEDURE <identifier> (<params>)
+            <statements>
+        ENDPROCEDURE
+
+        PRIVATE FUNCTION <identifier> (<params>) RETURNS <type>
+            <statements>
+        ENDFUNCTION
+
+        PUBLIC FUNCTION <identifier> (<params>) RETURNS <type>
+            <statements>
+        ENDFUNCTION
+        ```
+    * create an object
+        ```
+        NEW <identifier> (<values>)
+        ```
+
+    > If you do not sign a variable or procedure or function explicitly, it will be public by default.
+
 ### Special Syntax of **CPC** Interpreter
 * delete a variable or constant on RAM
-        ```
-        DELETE <identifier>
-        ```
-    * do nothing
-        ```
-        PASS
-        ```
-    * import **CPC** files
-        ```
-        IMPORT <expression>
-        ```
-        * `expression` here should be a string within double quotes.
-        * There is no isolation between the imported file and the
-        main file. Identifiers may collide.
-        * It is suggested to use the [`Import`](scripts/import.cpc) function
-        to import a package instead.
-        ```
-        CONSTANT test = Import("test/import_test.cpc")
-        ```
+    ```
+    DELETE <identifier>
+    ```
+* do nothing
+    ```
+    PASS
+    ```
+* import **CPC** files
+    ```
+    IMPORT <expression>
+    ```
+    > `expression` here should be a string within double quotes.
+    > There is no isolation between the imported file and the main file. Identifiers may collide.
+    > It is suggested to use the [`Import`](scripts/import.cpc) function to import a package instead.
+    ```
+    CONSTANT <identifier> = Import("<path to import file>")
+    ```
+
 ### Built-in Functions from CAIE Standard
+* `LEFT(ThisString : STRING, x : INTEGER) RETURNS STRING`
+    ```
+    $ LEFT("ABCDEFGH", 3)
+    "ABC"
+    ```
 * `RIGHT(ThisString : STRING, x : INTEGER) RETURNS STRING`
     ```
     $ RIGHT("ABCDEFGH", 3)
@@ -452,15 +511,35 @@ The following items give the `DATATYPE`, its description, and the default value 
     "BCD"
     ```
 * `LCASE(ThisChar : CHAR) RETURNS CHAR`
+> Decrapricated since 2023
     ```
     $ LCASE('W')
     'w'
     ```
 * `UCASE(ThisChar : CHAR) RETURNS CHAR`
+> Decrapricated since 2023
     ```
     $ UCASE('h')
     'H'
     ```
+* `TO_UPPER(x : <datatype>) RETURNS <datatype>`
+> <datatype> may be `CHAR` or `STRING`
+  ```
+    $ TO_UPPER("hello")
+    "HELLO"
+
+    $ TO_UPPER('a')
+    'A'
+  ```
+* `TO_LOWER(x : <datatype>) RETURNS <datatype>`
+> <datatype> may be `CHAR` or `STRING`
+  ```
+    $ TO_LOWER("HELLO")
+    "hello"
+
+    $ TO_LOWER('A')
+    'a'
+  ```
 * `INT(x : REAL) RETURNS INTEGER`
     ```
     $ INT(27.5415)
@@ -473,6 +552,37 @@ The following items give the `DATATYPE`, its description, and the default value 
     ```
 * `EOF(file_path : STRING) RETURNS BOOLEAN`
 * `POW(x: REAL, y: REAL) RETURNS REAL`
+* `DAY(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ DAY(25/07/2023)
+    25
+  ```
+* `MONTH(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ MONTH(25/07/2023)
+    7
+  ```
+* `YEAR(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ YEAR(12/12/2005)
+    2005
+  ```
+* `DAYINDEX(ThisDate : DATE) RETURNS INTEGER`
+> Where Sunday = 1, Monday = 2 etc
+  ```
+    $ DAYINDEX(25/03/2024)
+    2
+  ```
+* `SETDATE(day : INTEGER, month : INTEGER, year : INTEGER) RETURNS DATE`
+  ```
+    $ SETDATE(25, 03, 2024)
+    25/03/2024
+  ```
+* `TODAY() RETURNS DATE`
+  ```
+    $ TODAY()
+    25/03/2024
+  ```
 
 ### Built-in Functions of this Interpreter
 > These functions are fairly useful, but they are not included in the [CAIE standard](https://www.cambridgeinternational.org/Images/697401-2026-syllabus-legacy-notice.pdf).
@@ -495,41 +605,31 @@ The following items give the `DATATYPE`, its description, and the default value 
     > if the Python code does not assign a value to `_result`, the function will return `None`.
     > you *must* pass all variables used in the Python code in `*args`, otherwise, it will not run correctly.
 
+* `VARTYPE(v)` is an interface to get the type of `v` and return it as a string.
+
+* `ANY` is a type that used to allow some unknown type data.
+
 * For more non-official scripts, please see [scripts](./scripts).
 
 ## Targets
-The following are the development targets of this project. Issues
-and PRs are welcome.
+### Version 0.1.x Target
+- [ ] Implement all features provided by [official document](./Pseudocode%20Guide%20for%20Teachers.pdf).
+- [ ] Increase the stability for running to achieve a relatively useable situation.
+### Version 0.2.x Target
+- [ ] Give the kernel a great update and optimization.
+- [ ] Implement a high performance virtual machine to run. (Similar as the solution of Java)
+### Version 0.3.x Target
+- [ ] Allow building into executable binary file.
+### Long-term Targets
+- [ ] Provide more packages for use.
+- [ ] Increase running speed and stability.
+- [ ] Implement bootstrap.
 
-- [x] basic operations
-- [x] functions and procedures
-- [x] materialize `TYPE`
-- [ ] materialize `CLASS`
-- [x] full file I/O support (`GETRECORD` and `PUTRECORD` not yet implemented)
-- [ ] more [non-official functions](./scripts/README.md)
-- [ ] improve efficiency (now improving)
+## Sponsors
+<a herf="https://1password.com/">
+    <img src="https://www.vectorlogo.zone/logos/1password/1password-ar21.svg" height="100" alt="1Password">
 
 ## Author and Contributors
 <a href="https://github.com/iewnfod/CAIE_Code/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=iewnfod/CAIE_Code">
 </a>
-
-## License
-MIT License
-
-Copyright (c) 2023 Iewnfod
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or
-substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

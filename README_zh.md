@@ -1,17 +1,18 @@
 # CAIE Code (cpc)
 
-<br/>
 <p align="center">
 <a href="./assets/cpc.svg">
 <img src="./assets/cpc.svg" width="100" height="100" alt="logo">
 </a>
-<h3 align="center">the CAIE Pseudocode Interpreter</h3>
+<h3 align="center">CAIE 伪代码解释器</h3>
 </p>
 <p align="center">
-<a href="./README_cn.md">中文</a> | <a href="./README.md">English</a>
+<a href="./README_zh.md">中文</a> | <a href="./README.md">English</a>
 </p>
 
 ## 安装与使用
+
+> [在线版本](https://github.com/createchstudio/caie-code-environment)
 
 ### 安装前提
 1. `Python3` 环境 *推荐使用 PyPy3 以获得更好的性能*
@@ -20,12 +21,18 @@
 3. `cargo`命令
 
 ### 正式安装
+0. 对于 macOS 用户，可使用以下脚本一键安装：
+```shell
+curl -fsSL https://atcrea.tech/cpc.sh | sh
+```
+
+ *对于其他用户...*
+
 1. 克隆此项目
     ```git clone https://github.com/iewnfod/CAIE_Code.git```
-2. MacOS 用户可直接运行Releases内的 [`CAIE_Code_Installer.dmg`](https://github.com/iewnfod/CAIE_Code/releases/tag/v0.1.4-pkg)，其他系统用户请继续根据`3, 4`步进行安装
-3. 进入项目
+2. 进入项目
     ```cd CAIE_Code```
-4. 运行
+3. 运行
     * 二进制文件存在于`bin`中，请将自己系统对应的二进制文件加入到`PATH`中
     * `MacOS`若无法正常运行其中的二进制文件，可尝试自己编译 [`build.sh`](./build.sh)
     * `Windows`若无法正常运行，也可尝试自己编译 [`build.ps1`](./build.ps1)
@@ -39,7 +46,7 @@
 
 ### 更新
 * 如果您是完全使用以上步骤进行安装的，您可以使用`cpc -u`快速更新
-* 在`dc0cd71`之后引入自动更新功能，每天自动检测一次更新，可由选项配置
+* 在`dc0cd71`之后引入自动更新功能，每周自动检测一次更新，可由选项配置
 * 如果您并没有使用`git`进行安装，您需要手动下载新的版本，并使用和您之前相同的方法安装
 
 ## 用法
@@ -51,17 +58,20 @@ cpc [file_paths] [options]
 | Mnemonic | Option | Description |
 | -------- | ------ | ----------- |
 | `-c` | `--config` | 对解释器进行设置 |
+| `-d` | `--document` | 使用系统默认方式打开官方规范文件 |
 | `-h` | `--help` | 显示帮助页面 |
 | `-k` | `--keywords` | 显示所有的关键字 |
 | `-m` | `--migrate` | 将一个目录中的所有 `.p` 文件切换为 `.cpc` |
+| `-n` | `--notification` | 显示由开发者发布的未过期通知 |
 | `-p` | `--parse` | 显示所有解析的信息 |
 | `-t` | `--time` | 显示运行脚本花费的时间 |
 | `-u` | `--update` | 更新此解释器的版本 |
 | `-v` | `--version` | 显示解释器当前版本 |
 | `-gt` | `--get-tree` | 显示脚本解析后生成的可运行的树 |
 | `-lc` | `--list-configs` | 显示解释器的所有设置 |
-| `-rc` | `--reset-configs` | 删除解释器的所有设置 |
 | `-ne` | `--no-error` | 禁止所有错误的输出 |
+| `-rc` | `--reset-configs` | 删除解释器的所有设置 |
+| `-init` | `--init-requirements` | 安装所有的依赖 |
 
 ### 可选配置
 
@@ -97,33 +107,43 @@ cpc [file_paths] [options]
   - `true`： 启用开发者模式。
   - `false`： 关闭开发者模式。
 
+- `integrity-protection`
+
+    - `true`: 启用完整性保护。
+    - `false`: 禁用完整性保护。
+
+    > 完整性保护将会阻止任何意外或恶意的解释器修改。
+
+    > 此保护将在开发者模式下被自动禁用。
+
 - 开发者选项
 
   - `dev.simulate-update`
     - `true`: 开启模拟更新
     - `false`: 关闭模拟更新
 
-### 常见问题
+## 常见问题
 
-#### 出现 `Import Error`
+### 出现 `Import Error`
 尝试手动安装依赖：
 ```shell
 pip install -r requirements.txt
 ```
 
-#### 成功执行了第四步的依赖安装但还是无法正常运行
+### 成功执行了第四步的依赖安装但还是无法正常运行
 `cpc`文件会优先选择 `PyPy3` 运行
 因此，在安装依赖时，请确保安装在了正确版本的 `Python3` 上
 可以使用 `<指定Python版本> -m pip install -r requirements.txt` 进行安装
 
-#### Playground 模式下，上下左右键无法正常使用
+### Playground 模式下，上下左右键无法正常使用
 使用 `pip install readline` 安装依赖并尝试运行
 若 `readline` 无法正常安装，请安装 `gnureadline`，即 `pip install gnureadline`，再尝试运行
 
-#### cpc在启动时报OSError
+### cpc在启动时报OSError
 进入`cpc`安装目录，可使用
 删除`.cpc_history`文件
 更新`cpc`
+
 ```shell
 cd $(which cpc)/../..
 rm -rf .cpc_history
@@ -135,11 +155,11 @@ cpc -u
 
 ## 效率测试
 ### 测试环境：
-* 机型： 2020 Macbook Pro
+* 机型： 2020 Macbook Pro (A2338)
 * 处理器： Apple M1
 * 内存： 8GB
 * 核心： 8个 (4能效，4性能)
-* 系统版本： MacOS 13.3.1 (22E261)
+* 系统版本： macOS 14.1.1 (23B81)
 * Python 版本： PyPy 3.9.16
 
 ### 基础测试
@@ -314,7 +334,7 @@ NEXT i
 7. 函数
     * 无返回值函数定义
         ```
-        PROCEDURE <identifier>
+        PROCEDURE <identifier> ()
             <statements>
         ENDPROCEDURE
 
@@ -324,7 +344,7 @@ NEXT i
         ```
     * 无返回值函数调用
         ```
-        CALL <identifier>
+        CALL <identifier> ()
 
         CALL <identifier> (<value>, ...)
         ```
@@ -390,7 +410,47 @@ NEXT i
             <statements>
         ENDTYPE
         ```
-10. 由此解释器提供的特殊语法
+10. 面对对象
+    * 定义对象
+        ```
+        CLASS <identifier>
+            PUBLIC PROCEDURE NEW (<params>)
+                <statements>
+            ENDPROCEDURE
+            <statements>
+        ENDCLASS
+        ```
+    * 私有/公有变量
+        ```
+        PRIVATE <identifier> : <type>
+        PUBLIC <identifier> : <type>
+        ```
+    * 私有/公有函数
+        ```
+        PRIVATE PROCEDURE <identifier> (<params>)
+            <statements>
+        ENDPROCEDURE
+
+        PUBLIC PROCEDURE <identifier> (<params>)
+            <statements>
+        ENDPROCEDURE
+
+        PRIVATE FUNCTION <identifier> (<params>) RETURNS <type>
+            <statements>
+        ENDFUNCTION
+
+        PUBLIC FUNCTION <identifier> (<params>) RETURNS <type>
+            <statements>
+        ENDFUNCTION
+        ```
+    * 创建实例
+        ```
+        NEW <identifier> (<values>)
+        ```
+
+    > 若不标明变量或函数的访问权限，默认为公有
+
+11. 由此解释器提供的特殊语法
     * DELETE 删除变量或常量
         ```
         DELETE <identifier>
@@ -403,14 +463,19 @@ NEXT i
         ```
         IMPORT <expression>
         ```
-        * 此处的`expression`通常为一个被双引号包裹的字符串
-        * 导入操作并不会做任何隔离，也就是说，被导入的文件的所有内容都会完全暴露给当前文件，因此请注意变量名重复使用的问题
-        * 因此推荐使用[`Import`](./scripts/import.cpc)函数进行导入操作
+        > 此处的`expression`通常为一个被双引号包裹的字符串
+        > 导入操作并不会做任何隔离，也就是说，被导入的文件的所有内容都会完全暴露给当前文件，因此请注意变量名重复使用的问题
+        > 因此推荐使用[`Import`](./scripts/import.cpc)函数进行导入操作
         ```
-        CONSTANT test = Import("test/import_test.cpc")
+        CONSTANT <identifier> = Import("<path to import file>")
         ```
 
 ### 内置函数
+* `LEFT(ThisString : STRING, x : INTEGER) RETURNS STRING`
+    ```
+    $ LEFT("ABCDEFGH", 3)
+    "ABC"
+    ```
 * `RIGHT(ThisString : STRING, x : INTEGER) RETURNS STRING`
     ```
     $ RIGHT("ABCDEFGH", 3)
@@ -427,15 +492,35 @@ NEXT i
     "BCD"
     ```
 * `LCASE(ThisChar : CHAR) RETURNS CHAR`
+> 从2023年开始弃用
     ```
     $ LCASE('W')
     'w'
     ```
 * `UCASE(ThisChar : CHAR) RETURNS CHAR`
+> 从2023年开始弃用
     ```
     $ UCASE('h')
     'H'
     ```
+* `TO_UPPER(x : <datatype>) RETURNS <datatype>`
+> <datatype> 可以是 `CAHR` 或者 `STRING`
+  ```
+    $ TO_UPPER("hello")
+    "HELLO"
+
+    $ TO_UPPER('a')
+    'A'
+  ```
+* `TO_LOWER(x : <datatype>) RETURNS <datatype>`
+> <datatype> 可以是 `CAHR` 或者 `STRING`
+  ```
+    $ TO_LOWER("HELLO")
+    "hello"
+
+    $ TO_LOWER('A')
+    'a'
+  ```
 * `INT(x : REAL) RETURNS INTEGER`
     ```
     $ INT(27.5415)
@@ -448,6 +533,38 @@ NEXT i
     ```
 * `EOF(file_path : STRING) RETURNS BOOLEAN`
 * `POW(x: REAL, y: REAL) RETURNS REAL`
+* `DAY(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ DAY(25/07/2023)
+    25
+  ```
+* `MONTH(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ MONTH(25/07/2023)
+    7
+  ```
+* `YEAR(ThisDate : DATE) RETURNS INTEGER`
+  ```
+    $ YEAR(12/12/2005)
+    2005
+  ```
+* `DAYINDEX(ThisDate : DATE) RETURNS INTEGER`
+> 周日返回1，周一返回2，以此类推
+  ```
+    $ DAYINDEX(25/03/2024)
+    2
+  ```
+* `SETDATE(day : INTEGER, month : INTEGER, year : INTEGER) RETURNS DATE`
+  ```
+    $ SETDATE(25, 03, 2024)
+    25/03/2024
+  ```
+* `TODAY() RETURNS DATE`
+  ```
+    $ TODAY()
+    25/03/2024
+  ```
+
 
 **(以下方法均不属于CAIE提供的标准方法)**
 * `EXIT(code : INTEGER)` 以code为退出码，退出程序 (若不填写code，则默认为0)
@@ -461,39 +578,31 @@ NEXT i
         1
         ```
 
+* `VARTYPE(v)` 获取`v`的数据类型并以字符串的形式返回
+
+* `ANY` 这是一个任意类型用于允许一些未知类型的输入
+
 * 更多非官方内置函数，请查阅 [scripts](./scripts)
 
 ## 目标
-- [x] 基础功能实现
-- [x] 函数实现
-- [x] 实现 `TYPE`
-- [ ] 实现 `CLASS`
-- [x] 实现文件读写（还剩 `GETRECORD` 和 `PUTRECORD`，这需要等自定义类型实现后才能实现）
-- [ ] 提供更多[非官方函数](./scripts/README.md)
-- [ ] 提高效率（正在进行）
+### Version 0.1.x 目标
+- [ ] 实现所有由[官方文档](./Pseudocode%20Guide%20for%20Teachers.pdf)规定的功能
+- [ ] 提高运行的稳定性，使得整体达到一个相对可用的状态
+### Version 0.2.x 目标
+- [ ] 对核心进行大规模更新与优化
+- [ ] 支持编译到高性能虚拟机 (也就是类似于Java的解决方法)
+### Version 0.3.x 目标
+- [ ] 支持直接编译为可执行文件
+### 长期目标
+- [ ] 提供更多包
+- [ ] 提高运行速度与效率
+- [ ] 实现自举
 
+## 赞助商
+<a herf="https://1password.com/">
+    <img src="https://www.vectorlogo.zone/logos/1password/1password-ar21.svg" height="100" alt="1Password">
 
 ## 作者与贡献者
 <a href="https://github.com/iewnfod/CAIE_Code/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=iewnfod/CAIE_Code">
 </a>
-
-## License
-MIT License
-
-Copyright (c) 2023 Iewnfod
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or
-substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

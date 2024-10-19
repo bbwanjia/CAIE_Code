@@ -2,6 +2,10 @@ class base:
     def __init__(self, name=None):
         self.name = name
         self.is_struct = False
+        self.current_space = None
+        self.is_const = False
+        self.value = None
+        self.is_enum = False
 
     def __str__(self):
         return str(self.value)
@@ -91,10 +95,10 @@ class DATE(base):
         if key == 1:
             return self.type
         else:
-            return (self.year, self.month, self.day)
+            return str(self)
 
     def set_value(self, new_value):
-        self.year, self.month, self.day = new_value
+        self.day, self.month, self.year = str(new_value).split('/')
 
 class ARRAY(base):
     def __init__(self, value={}, *args, **kwargs):
@@ -140,6 +144,8 @@ class ARRAY(base):
         if v == None:
             v = self.value
         for i in v.keys():
+            if i == "left" or i == "right":
+                continue
             if v[i][1] == 'ARRAY':
                 self.to_target(target, v[i])
             else:
@@ -150,12 +156,23 @@ class ARRAY(base):
                     except:
                         add_stack_error_message(f'Cannot change value `{str(v[i][0])}` into `{target}`')
 
-from enum import Enum
-class ENUM(base):
-    def __init__(self, *args, **kwargs):
+class POINTER(base):
+    def __init__(self, value=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.value = None
-        self.type = 'ENUM'
+        self.value = value
+        self.type = 'POINTER'
 
     def set_value(self, value):
-        self.value = Enum(self.name, value)
+        self.value = value
+
+    def solve_value(self):
+        return self.value
+
+class ANY(base):
+    def __init__(self, value=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.value = value
+        self.type = 'ANY'
+
+    def set_value(self, value):
+        self.value = value
